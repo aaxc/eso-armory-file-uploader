@@ -1,0 +1,24 @@
+{
+  "name": "eso-armory-file-uploader",
+  "version": "1.1.0",
+  "description": "Create your own character armory and let others see your fame!",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/aaxc/eso-armory-file-uploader",
+  "keywords": [
+    "ESO",
+    "Armory",
+    "file",
+    "Uploader"
+  ],
+  "author": "Dainis Abols (aaxc)",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^6.0.10"
+  },
+  "dependencies": {
+    "chokidar": "^3.1.1"
+  }
+}

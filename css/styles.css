@@ -1,0 +1,140 @@
+/**** DISABLES DRAG ****/
+*, *::after, *::before {
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-app-region: no-drag;
+    cursor: default;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background: url('file:///images/Background.png') no-repeat center center fixed;
+    background-color: black !important;
+    background-size: cover
+}
+
+.violet {
+    float: left;
+    margin-left: 30px;
+    height: calc(100% - 50px);
+    width: calc(175px - 30px);
+    background-color: rgba(155, 39, 176, 0.76);
+    padding: 25px 15px 25px 15px;
+}
+
+.basic {
+    height: calc(100% - 50px);
+    width: 345px;
+    float: right;
+    text-align: left;
+}
+
+.logoText {
+    position: absolute;
+    width: 145px;
+    bottom: 0;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    font-weight: normal;
+    margin-bottom: 35px;
+}
+
+h1 {
+    color: rgb(255, 255, 255);
+    float: left;
+    font-size: 28px;
+    font-weight: normal;
+}
+
+.text {
+    float: left;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.limitTwo {
+    height: 2em;
+    line-height: 1em;
+    overflow: hidden;
+}
+
+.title {
+    font-size: 16px !important;
+    color: rgb(255, 255, 255);
+    width: 100%;
+    padding-bottom: 3px;
+}
+
+.blue {
+    color: rgb(1, 169, 242);
+}
+
+.green {
+    color: rgb(139, 195, 74);
+}
+
+a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+}
+
+a.buttonGreen {
+    background-color: rgb(139, 195, 74);
+}
+
+a.buttonGreen:hover {
+    background-color: rgba(139, 195, 74, 0.8);
+}
+
+a.buttonGray {
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+a.buttonGray:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.spacer {
+    float: left;
+    clear: both;
+    width: 300px;
+    height: 15px;
+}
+
+footer {
+    text-align: right;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.upload {
+    float: left;
+    clear: both;
+    width: 300px;
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    height: 50px;
+}
+
+.button {
+    border: none;
+    padding: 10px 30px 10px 30px;
+}
+
+.auto {
+    float: left;
+    padding-left: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
