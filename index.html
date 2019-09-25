@@ -5,8 +5,6 @@
     <title>ESO Armory File uploader</title>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/styles.css">
-    <style>
-    </style>
 </head>
 <body>
 <div class="violet">
@@ -21,27 +19,90 @@
     <div class="spacer"></div>
 
     <div class="text title">Currently used file:</div>
-    <div class="text green limitTwo">Armory.lua</div>
+    <div class="text green limitThree" id="usedFile"></div>
 
     <div class="spacer"></div>
     <div class="spacer"></div>
 
-    <div class="upload">
-        <a href="#" class="button buttonGreen" style="float: left;">Upload now</a>
-        <label class="auto" for="autoUpload">
-            <input id="autoUpload" type="checkbox" checked="checked"> Auto upload
-        </label>
-    </div>
-    <div class="spacer"></div>
-    <div class="upload">
-        <a href="#" class="button buttonGray">Choose different file</a>
-    </div>
+    <form id="uploadForm" action="#" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="token" value="" id="appToken"/>
+        <div class="upload">
+            <a id="uploadButton" href="#" class="button greenDisabled" style="float: left;" aria-disabled="true">Upload
+                now</a>
+            <label class="auto" for="autoUpload">
+                <input id="autoUpload" type="checkbox" accept=".lua"> Auto upload
+            </label>
+        </div>
+        <div class="spacer"></div>
+        <div class="upload">
+            <a href="#" id="my-button" class="button buttonGray">Choose different file</a>
+            <input type="file" name="file" id="my-file" style="display: none;">
+        </div>
+    </form>
 </div>
 <footer>
     API Version 100029<br/>
     Last successful upload 2019-09-23 18:31:32
 </footer>
 <script src="./renderer.js"></script>
+<script>window.$ = window.jQuery = require('jquery');</script>
 <script src="./js/scripts.js"></script>
+<script>
+  const {remote} = require('electron');
+  $(function () {
+    /**
+     * Activates upload button
+     */
+    function activateButton() {
+      $('#uploadButton').attr('aria-disabled', 'false');
+      $('#uploadButton').removeClass('greenDisabled');
+      $('#uploadButton').addClass('buttonGreen');
+    }
+
+    // Set form url
+    const site = remote.getGlobal('sharedObj').site;
+    $('#uploadForm').attr('action', site);
+
+    // Set token
+    const token = remote.getGlobal('sharedObj').token;
+    $('#appToken').val(token);
+
+    // Set default file location
+    const fileLocation = remote.getGlobal('sharedObj').fileLocation;
+
+    if (fileLocation != null) {
+      // activateButton();
+      $('#usedFile').text(fileLocation);
+      // $('#my-file').val(fileLocation);
+    }
+
+    // Set auto-upload
+    const auto = remote.getGlobal('sharedObj').auto;
+    if (auto != 'false') {
+      $('#autoUpload').attr('checked', 'checked')
+    }
+
+    $('#autoUpload').on('change', function () {
+      const store = remote.getGlobal('sharedObj').store;
+      if ($(this).is(":checked")) {
+        store.set('auto', 'true');
+      } else {
+        store.set('auto', 'false');
+      }
+    });
+
+    // Fetch file changes
+    $('#my-file').on('change', function () {
+      let file = this.files[0].path;
+      if (file != "undefined") {
+        $("#usedFile").text(file);
+        const store = remote.getGlobal('sharedObj').store;
+        store.set('fileLocation', file);
+      }
+      activateButton();
+    });
+
+  });
+</script>
 </body>
 </html>

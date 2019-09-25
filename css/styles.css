@@ -1,10 +1,12 @@
 /**** DISABLES DRAG ****/
+/*
 *, *::after, *::before {
     -webkit-user-select: none;
     -webkit-user-drag: none;
     -webkit-app-region: no-drag;
     cursor: default;
 }
+*/
 
 html, body {
     height: 100%;
@@ -65,6 +67,12 @@ h1 {
     overflow: hidden;
 }
 
+.limitThree {
+    max-height: 3em;
+    line-height: 1em;
+    overflow: hidden;
+}
+
 .title {
     font-size: 16px !important;
     color: rgb(255, 255, 255);
@@ -88,6 +96,12 @@ a {
 
 a.buttonGreen {
     background-color: rgb(139, 195, 74);
+}
+
+a.greenDisabled,
+a.greenDisabled:hover {
+    cursor: default !important;
+    background-color: rgba(50, 70, 27, 0.8);
 }
 
 a.buttonGreen:hover {
