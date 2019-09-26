@@ -1,32 +1,23 @@
-$(function () {
-  // Simulate click
-  $('#my-button').click(function () {
-    $('#my-file').click();
-  });
+// This file is required by the index.html file and will
+// be executed in the renderer process for that window.
+// All of the Node.js APIs are available in this process.
+const remote = require('electron').remote;
 
-  // Submit form
-  $("#uploadButton").on('click', function () {
-    let disabled = $(this).attr('aria-disabled');
-    if (disabled == 'false') {
-      saveFile();
+(function handleWindowControls() {
+  // When document has loaded, initialise
+  document.onreadystatechange = () => {
+    if (document.readyState == "complete") {
+      init();
     }
-  });
+  };
 
-  /**
-   * Form submit and file upload function
-   *
-   * @returns {Promise<void>}
-   */
-  async function saveFile() {
-    let that = document.getElementById('my-file');
-    let formData = new FormData();
-    formData.append("file", that.files[0]);
-    formData.append("token", $('#appToken').val());
-    var action = $('#uploadForm').attr('action');
-    let result = await fetch(action, {
-      method: "POST",
-      body: formData
+  function init() {
+    let window = remote.getCurrentWindow();
+    const closeButton = document.getElementById('close-button');
+
+    closeButton.addEventListener("click", event => {
+      window = remote.getCurrentWindow();
+      window.close();
     });
-    console.log(result);
   }
-});
+})();

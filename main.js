@@ -2,7 +2,7 @@
 const {app, Menu, Tray, BrowserWindow} = require('electron');
 const path = require('path');
 const fs = require('fs');
-const Store = require('./js/store.js');
+const Store = require('./js/Store.js');
 // const CronJob = require('cron').CronJob;
 
 // Pre-define main objects
@@ -48,7 +48,7 @@ app.on('ready', () => {
     }
   });
 
-  tray = new Tray('images/icon256x256.png')
+  tray = new Tray(path.join(__dirname, 'images/icon256x256.png'))
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Show uploader', click: function () {
@@ -127,6 +127,10 @@ function createWindow() {
     width: 600,
     height: 450,
     resizable: false,
+    fullscreen: false,
+    darkTheme: true,
+    frame: false,
+    titleBarStyle: 'hidden',
     webPreferences: {
       nativeWindowOpen: true,
       nodeIntegrationInWorker: true,
@@ -134,7 +138,10 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js')
     },
     icon: path.join(__dirname, 'images/icon256x256.png'),
+    backgroundColor: '#000000',
   });
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.setFullScreen(false);
 
   // Basic entry point
   mainWindow.loadFile('index.html');
@@ -158,12 +165,36 @@ function createWindow() {
   // Destroy
   mainWindow.on('closed', function () {
     mainWindow = null
-  })
+  });
 
   // // Add cron for file changes and submits
   // new CronJob(' */1 * * * *', function () {
   //   // Add events here
   // }, null, true, 'America/Los_Angeles');
+
+  if (process.platform == 'darwin') {
+    const { systemPreferences } = remote;
+
+    const setOSTheme = () => {
+      let theme = 'dark';
+      window.localStorage.os_theme = theme;
+
+      //
+      // Defined in index.html, so undefined when launching the app.
+      // Will be defined for `systemPreferences.subscribeNotification` callback.
+      //
+      if ('__setTheme' in window) {
+        window.__setTheme()
+      }
+    };
+
+    systemPreferences.subscribeNotification(
+      'AppleInterfaceThemeChangedNotification',
+      setOSTheme,
+    );
+
+    setOSTheme()
+  }
 }
 
 // This method will be called when App has finished initialization and is ready to create browser windows.

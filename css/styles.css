@@ -1,25 +1,56 @@
+#title-bar {
+    -webkit-app-region: drag;
+    height: 20px;
+    background-color: #1e1e1e;
+    margin: 0;
+    padding: 5px;
+    color: white;
+}
+
+#topTitle {
+    position: fixed;
+    top: 8px;
+    left: 15px;
+    font-size: 13px;
+}
+
+#title-bar-btns {
+    font-family: "Segoe MDL2 Assets";
+    font-size: 10px;
+    -webkit-app-region: no-drag;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+}
 /**** DISABLES DRAG ****/
-/*
-*, *::after, *::before {
+.noTouch, .noTouch::after, .noTouch::before {
     -webkit-user-select: none;
     -webkit-user-drag: none;
     -webkit-app-region: no-drag;
     cursor: default;
 }
-*/
+
+#close-button {
+    padding: 10px;
+    cursor: pointer;
+}
+#close-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
 
 html, body {
     height: 100%;
     font-family: 'Ubuntu', sans-serif;
 }
 
+.noTouch {
+    height: calc(100% - 30px);
+}
+
 body {
     width: 100%;
     padding: 0;
     margin: 0;
-    background: url('file:///images/Background.png') no-repeat center center fixed;
-    background-color: black !important;
-    background-size: cover
 }
 
 .violet {
@@ -94,6 +125,14 @@ a {
     font-size: 16px;
 }
 
+.greenText {
+    color: rgb(139, 195, 74) !important;
+}
+
+.redText {
+    color: rgb(233, 30, 99) !important;
+}
+
 a.buttonGreen {
     background-color: rgb(139, 195, 74);
 }
@@ -152,4 +191,16 @@ footer {
     padding-left: 10px;
     margin-top: 10px;
     cursor: pointer;
+}
+
+.messageWindow {
+    float: left;
+    width: 300px;
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid white;
+    background: black;
+    color: white;
+    font-family: Lucida Console, Lucida Sans Typewriter, monaco, Bitstream Vera Sans Mono, monospace;
+    font-size: 12px;
 }
