@@ -5,6 +5,12 @@
     <title>ESO Armory File uploader</title>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/styles.css">
+    <script>
+      const remote = require('electron').remote;
+      const store = remote.getGlobal('sharedObj').store;
+      let site = remote.getGlobal('sharedObj').site;
+      let token = remote.getGlobal('sharedObj').token;
+    </script>
 </head>
 <body style="background: url('./images/Background.png') no-repeat center center fixed; background-color: black !important; background-size: cover;">
 
@@ -13,6 +19,9 @@
     <div id="title-bar-btns">
         <div class="button" id="close-button">
             <span>&#xE8BB;</span>
+        </div>
+        <div class="button" id="minimize-button">
+            <span>&#xE921;</span>
         </div>
     </div>
 </div>
@@ -40,7 +49,6 @@
         <div class="spacer"></div>
 
         <form id="uploadForm" action="#" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="token" value="" id="appToken"/>
             <div class="upload">
                 <a id="uploadButton" href="#" class="button greenDisabled" style="float: left;" aria-disabled="true">Upload
                     now</a>
@@ -56,8 +64,9 @@
         </form>
     </div>
     <footer>
-        API Version 100029<br/>
-        Last successful upload 2019-09-23 18:31:32
+        Software version 1.1.6-beta<br/>
+        ESOUI API Version 100029<br/>
+        Last auto upload <span id="lastUpdate"></span>
     </footer>
 </div>
 <script src="./renderer.js"></script>
@@ -74,16 +83,50 @@
       $('#uploadButton').addClass('buttonGreen');
     }
 
-    // Set form url
-    const site = remote.getGlobal('sharedObj').site;
-    $('#uploadForm').attr('action', site);
+    /**
+     * Formats date to default syntax
+     */
+    function formatDate(lastUpdate) {
+      var d = new Date(lastUpdate);
 
-    // Set token
-    const token = remote.getGlobal('sharedObj').token;
-    $('#appToken').val(token);
+      var curr_day = d.getDate();
+      if (curr_day < 10) {
+        curr_day = "0" + curr_day
+      }
+      var curr_month = d.getMonth();
+      curr_month++;
+      if (curr_month < 10) {
+        curr_month = "0" + curr_month;
+      }
+      var curr_year = d.getFullYear();
+
+      var curr_hour = d.getHours();
+      if (curr_hour < 10) {
+        curr_hour = "0" + curr_hour;
+      }
+
+      var curr_min = d.getMinutes();
+      if (curr_min < 10) {
+        curr_min = "0" + curr_min;
+      }
+
+      return (curr_year + "-" + curr_month + "-" + curr_day + " " + curr_hour + ":" + curr_min);
+    }
+
+    // Set file changes
+    const lastUpdate = store.get('lastUpdate');
+    if (typeof lastUpdate != 'undefined') {
+      $("#lastUpdate").text(formatDate(lastUpdate));
+    }
+    setInterval(function () {
+      const lastUpdate = store.get('lastUpdate');
+      if (typeof lastUpdate != 'undefined') {
+        $("#lastUpdate").text(formatDate(lastUpdate));
+      }
+    }, 60000);
 
     // Set default file name
-    const fileLocation = remote.getGlobal('sharedObj').fileLocation;
+    const fileLocation = store.get('fileLocation');
     if (fileLocation != null) {
       $('#usedFile').text(fileLocation);
     }
@@ -95,7 +138,6 @@
     }
 
     $('#autoUpload').on('change', function () {
-      const store = remote.getGlobal('sharedObj').store;
       if ($(this).is(":checked")) {
         store.set('auto', 'true');
       } else {
@@ -105,6 +147,7 @@
 
     // Fetch file changes
     $('#my-file').on('change', function () {
+      $('.messageWindow').hide();
       let file = this.files[0].path;
       if (file != "undefined") {
         $("#usedFile").text(file);
@@ -123,7 +166,8 @@
     $("#uploadButton").on('click', function () {
       let disabled = $(this).attr('aria-disabled');
       if (disabled == 'false') {
-        $('#messageWindow').hide();
+        $('.messageWindow').html('<span class="loading" style="color: white !important;">Data is being uploaded and processed</span>')
+        $('.messageWindow').show();
         saveFile();
       }
     });
@@ -137,20 +181,18 @@
       let that = document.getElementById('my-file');
       let formData = new FormData();
       formData.append("file", that.files[0]);
-      formData.append("token", $('#appToken').val());
-      var action = $('#uploadForm').attr('action');
+      formData.append("token", token);
+      var action = site;
       let response = await fetch(action, {
         method: "POST",
         body: formData
       });
       let data = await response.json();
       if (data.success == 'false') {
-        console.log('FALSE');
-        $('.messageWindow').html('<span class="greenText"">' + data.message + '</span>');
+        $('.messageWindow').html('<span class="redText"">' + data.message + '</span>');
         $('.messageWindow').show();
       } else if (data.success == 'true') {
-        console.log('TURE');
-        $('.messageWindow').html('<span class="redText"">' + data.message + '</span>');
+        $('.messageWindow').html('<span class="greenText"">' + data.message + '</span>');
         $('.messageWindow').show();
       }
     }

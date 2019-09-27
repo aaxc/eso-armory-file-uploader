@@ -3,11 +3,13 @@ const {app, Menu, Tray, BrowserWindow} = require('electron');
 const path = require('path');
 const fs = require('fs');
 const Store = require('./js/Store.js');
-// const CronJob = require('cron').CronJob;
+const CronJob = require('cron').CronJob;
+var FormData = require('form-data');
 
 // Pre-define main objects
 let mainWindow;
 let tray;
+let fileChange;
 
 // Include environment variables
 require('dotenv').config();
@@ -24,99 +26,11 @@ const store = new Store({
   configName: 'user-preferences',
   defaults: {
     fileLocation: 'Documents\\Elder Scrolls Online\\live\\SavedVariables\\Armory.lua',
-    auto: 'true'
+    auto: 'true',
+    lastUpdate: 0
   }
 });
 global.sharedObj.store = store;
-
-// Define tray and minimize behavior
-app.on('ready', () => {
-  let fileLocation = store.get('fileLocation');
-  let auto = store.get('auto');
-  if (auto != 'undefined') {
-    global.sharedObj.auto = auto;
-  }
-
-  fs.access(fileLocation, fs.F_OK, (err) => {
-    if (err) {
-      global.sharedObj.fileLocation = null;
-      return
-    }
-    global.sharedObj.fileLocation = fileLocation;
-    if (auto != 'false') {
-      StartWatcher(fileLocation);
-    }
-  });
-
-  tray = new Tray(path.join(__dirname, 'images/icon256x256.png'))
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Show uploader', click: function () {
-        mainWindow.show();
-      }
-    },
-    {
-      label: 'Exit', click: function () {
-        app.isQuiting = true;
-        app.quit();
-      }
-    },
-  ]);
-  tray.on('double-click', function (e) {
-    if (mainWindow.isVisible()) {
-      mainWindow.hide()
-    } else {
-      mainWindow.show()
-    }
-  });
-  tray.setToolTip('ESO Armory File uploader')
-  tray.setContextMenu(contextMenu)
-});
-
-/**
- * File watching method
- *
- * @param path
- * @constructor
- */
-function StartWatcher(path) {
-  let chokidar = require("chokidar");
-
-  let watcher = chokidar.watch(path, {
-    ignored: /[\/\\]\./,
-    persistent: true
-  });
-
-  function onWatcherReady() {
-    console.info('From here can you check for real changes, the initial scan has been completed.');
-  }
-
-  // Declare the listeners of the watcher
-  watcher
-    // .on('add', function (path) {
-    //   // console.log('File', path, 'has been added');
-    // })
-    // .on('addDir', function (path) {
-    //   // console.log('Directory', path, 'has been added');
-    // })
-    .on('change', function (path) {
-      console.log('File', path, 'has been changed');
-    })
-    // .on('unlink', function (path) {
-    //   // console.log('File', path, 'has been removed');
-    // })
-    // .on('unlinkDir', function (path) {
-    //   // console.log('Directory', path, 'has been removed');
-    // })
-    // .on('error', function (error) {
-    //   console.log('Error happened', error);
-    // })
-    .on('ready', onWatcherReady);
-    // .on('raw', function (event, path, details) {
-    //   // This event should be triggered everytime something happens.
-    //   // console.log('Raw event info:', event, path, details);
-    // });
-}
 
 /**
  * Create the browser window.
@@ -166,36 +80,80 @@ function createWindow() {
   mainWindow.on('closed', function () {
     mainWindow = null
   });
-
-  // // Add cron for file changes and submits
-  // new CronJob(' */1 * * * *', function () {
-  //   // Add events here
-  // }, null, true, 'America/Los_Angeles');
-
-  if (process.platform == 'darwin') {
-    const { systemPreferences } = remote;
-
-    const setOSTheme = () => {
-      let theme = 'dark';
-      window.localStorage.os_theme = theme;
-
-      //
-      // Defined in index.html, so undefined when launching the app.
-      // Will be defined for `systemPreferences.subscribeNotification` callback.
-      //
-      if ('__setTheme' in window) {
-        window.__setTheme()
-      }
-    };
-
-    systemPreferences.subscribeNotification(
-      'AppleInterfaceThemeChangedNotification',
-      setOSTheme,
-    );
-
-    setOSTheme()
-  }
 }
+
+// Add cron for file changes and submits
+new CronJob(' */5 * * * *', function () {
+  let file = global.sharedObj.store.data.fileLocation;
+  let token = global.sharedObj.token;
+  let auto = global.sharedObj.store.data.auto;
+
+  if (auto == 'true') {
+    fs.stat(file, function (err, stats) {
+      let mtime = stats.mtime;
+      let oldDate = new Date(fileChange).valueOf();
+      let newDate = new Date(mtime).valueOf();
+      if (oldDate != newDate) {
+        fileChange = mtime;
+
+        let form = new FormData();
+        form.append("file", fs.createReadStream(file));
+        form.append("token", token);
+
+        form.submit(process.env.ESOARMORY_SITE, function (err, res) {
+          if (res.statusCode == 200) {
+            global.sharedObj.lastUpdate = fileChange.valueOf();
+            store.set('lastUpdate', fileChange.valueOf());
+            // console.log('SUCCESS!');
+          } else {
+            // console.log('FAILED');
+          }
+        });
+      }
+    });
+  }
+
+}, null, true, 'America/Los_Angeles');
+
+// Define tray and minimize behavior
+app.on('ready', () => {
+  let fileLocation = store.get('fileLocation');
+  let auto = store.get('auto');
+  if (auto != 'undefined') {
+    global.sharedObj.auto = auto;
+  }
+
+  fs.access(fileLocation, fs.F_OK, (err) => {
+    if (err) {
+      global.sharedObj.fileLocation = null;
+      return;
+    }
+  });
+
+  tray = new Tray(path.join(__dirname, 'images/icon256x256.png'))
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Show uploader', click: function () {
+        mainWindow.show();
+      }
+    },
+    {
+      label: 'Exit', click: function () {
+        app.isQuiting = true;
+        app.quit();
+      }
+    },
+  ]);
+  tray.on('double-click', function (e) {
+    if (mainWindow.isVisible()) {
+      mainWindow.hide()
+    } else {
+      mainWindow.show()
+    }
+  });
+  tray.setToolTip('ESO Armory File uploader')
+  tray.setContextMenu(contextMenu)
+});
 
 // This method will be called when App has finished initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
