@@ -1,7 +1,6 @@
 {
   "name": "eso_armory_file_uploader",
-  "version": "1.1.10",
-  "APIVersion": "100028-beta",
+  "version": "1.1.11",
   "description": "Create your own character armory and let others see your fame!",
   "main": "main.js",
   "scripts": {
