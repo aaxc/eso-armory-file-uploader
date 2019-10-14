@@ -4,22 +4,29 @@ const path = require('path');
 const fs = require('fs');
 const Store = require('./js/Store.js');
 const CronJob = require('cron').CronJob;
-var FormData = require('form-data');
+const FormData = require('form-data');
+
+// this should be placed at top of main.js to handle setup events quickly
+if (handleSquirrelEvent(app)) {
+  // squirrel event handled and app will exit in 1000ms, so don't do anything else
+  return;
+}
+
+
+// Include global variables
+global.sharedObj = {
+  auto: 'true',
+  site: 'https://www.eso-armory.com/app-savefile',
+  token: 'bD6s68BhrudnHLFD5JbjQtBsPeATZBrN6mQM5hF6nvjF6A9ZaWVQenSEc4a4wrtcn8A327XZs7wpjwYjhKK8JdpL8pEeqHgntGejq49tLgsUCfPwCqubeGMcG4gGB9UE',
+};
 
 // Pre-define main objects
 let mainWindow;
 let tray;
 let fileChange;
+let site = global.sharedObj.site;
+let token = global.sharedObj.token;
 
-// Include environment variables
-require('dotenv').config();
-global.sharedObj = {
-  environment: process.env.ENVIRONMENT,
-  auto: process.env.AUTO,
-  version: process.env.ESOUIAPIVERSION,
-  site: process.env.ESOARMORY_SITE,
-  token: process.env.ESOARMORY_KEY,
-};
 
 // First instantiate the class
 const store = new Store({
@@ -85,10 +92,8 @@ function createWindow() {
 // Add cron for file changes and submits
 new CronJob(' */5 * * * *', function () {
   let file = global.sharedObj.store.data.fileLocation;
-  let token = global.sharedObj.token;
   let auto = global.sharedObj.store.data.auto;
-
-  if (auto == 'true') {
+  if (auto == 'true' && fs.existsSync(file)) {
     fs.stat(file, function (err, stats) {
       let mtime = stats.mtime;
       let oldDate = new Date(fileChange).valueOf();
@@ -100,7 +105,7 @@ new CronJob(' */5 * * * *', function () {
         form.append("file", fs.createReadStream(file));
         form.append("token", token);
 
-        form.submit(process.env.ESOARMORY_SITE, function (err, res) {
+        form.submit(site, function (err, res) {
           if (res.statusCode == 200) {
             global.sharedObj.lastUpdate = fileChange.valueOf();
             store.set('lastUpdate', fileChange.valueOf());
@@ -117,18 +122,16 @@ new CronJob(' */5 * * * *', function () {
 
 // Define tray and minimize behavior
 app.on('ready', () => {
-  let fileLocation = store.get('fileLocation');
+  let fileLocation;
+  if (!fs.existsSync(store.get('fileLocation'))) {
+    fileLocation = null;
+    store.set('fileLocation', null);
+  }
+
   let auto = store.get('auto');
   if (auto != 'undefined') {
     global.sharedObj.auto = auto;
   }
-
-  fs.access(fileLocation, fs.F_OK, (err) => {
-    if (err) {
-      global.sharedObj.fileLocation = null;
-      return;
-    }
-  });
 
   tray = new Tray(path.join(__dirname, 'images/icon256x256.png'))
   const contextMenu = Menu.buildFromTemplate([
@@ -168,3 +171,68 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   if (mainWindow === null) createWindow()
 });
+
+// Installer events
+function handleSquirrelEvent(application) {
+  if (process.argv.length === 1) {
+    return false;
+  }
+
+  const ChildProcess = require('child_process');
+  const path = require('path');
+
+  const appFolder = path.resolve(process.execPath, '..');
+  const rootAtomFolder = path.resolve(appFolder, '..');
+  const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
+  const exeName = path.basename(process.execPath);
+
+  const spawn = function(command, args) {
+    let spawnedProcess, error;
+
+    try {
+      spawnedProcess = ChildProcess.spawn(command, args, {
+        detached: true
+      });
+    } catch (error) {}
+
+    return spawnedProcess;
+  };
+
+  const spawnUpdate = function(args) {
+    return spawn(updateDotExe, args);
+  };
+
+  const squirrelEvent = process.argv[1];
+  switch (squirrelEvent) {
+    case '--squirrel-install':
+    case '--squirrel-updated':
+      // Optionally do things such as:
+      // - Add your .exe to the PATH
+      // - Write to the registry for things like file associations and
+      //   explorer context menus
+
+      // Install desktop and start menu shortcuts
+      spawnUpdate(['--createShortcut', exeName]);
+
+      setTimeout(application.quit, 1000);
+      return true;
+
+    case '--squirrel-uninstall':
+      // Undo anything you did in the --squirrel-install and
+      // --squirrel-updated handlers
+
+      // Remove desktop and start menu shortcuts
+      spawnUpdate(['--removeShortcut', exeName]);
+
+      setTimeout(application.quit, 1000);
+      return true;
+
+    case '--squirrel-obsolete':
+      // This is called on the outgoing version of your app before
+      // we update to the new version - it's the opposite of
+      // --squirrel-updated
+
+      application.quit();
+      return true;
+  }
+};

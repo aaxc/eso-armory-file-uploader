@@ -64,8 +64,8 @@
         </form>
     </div>
     <footer>
-        Software version 1.1.6-beta<br/>
-        ESOUI API Version 100029<br/>
+        Version 1.1.9<br/>
+        ESOUI API Version 100028<br/>
         Last auto upload <span id="lastUpdate"></span>
     </footer>
 </div>
@@ -129,6 +129,10 @@
     const fileLocation = store.get('fileLocation');
     if (fileLocation != null) {
       $('#usedFile').text(fileLocation);
+    } else {
+      setTimeout(function () {
+        alert('No valid file found, please choose different Armory.lua file!')
+      }, 500);
     }
 
     // Set auto-upload
