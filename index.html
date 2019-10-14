@@ -8,6 +8,7 @@
     <script>
       const remote = require('electron').remote;
       const store = remote.getGlobal('sharedObj').store;
+      const version = remote.getGlobal('sharedObj').version;
       let site = remote.getGlobal('sharedObj').site;
       let token = remote.getGlobal('sharedObj').token;
     </script>
@@ -64,8 +65,7 @@
         </form>
     </div>
     <footer>
-        Version 1.1.9<br/>
-        ESOUI API Version 100028<br/>
+        Version <span id="version">-</span><br/>
         Last auto upload <span id="lastUpdate"></span>
     </footer>
 </div>
@@ -74,6 +74,9 @@
 <script src="./js/scripts.js"></script>
 <script>
   $(function () {
+    // Set version
+    $('#version').html(version);
+
     /**
      * Activates upload button
      */

@@ -1,5 +1,6 @@
 // Modules to control application life and create native browser window
-const {app, Menu, Tray, BrowserWindow} = require('electron');
+const {app, Menu, Tray, BrowserWindow, autoUpdater, ipcMain} = require('electron');
+
 const path = require('path');
 const fs = require('fs');
 const Store = require('./js/Store.js');
@@ -12,12 +13,12 @@ if (handleSquirrelEvent(app)) {
   return;
 }
 
-
 // Include global variables
 global.sharedObj = {
   auto: 'true',
   site: 'https://www.eso-armory.com/app-savefile',
   token: 'bD6s68BhrudnHLFD5JbjQtBsPeATZBrN6mQM5hF6nvjF6A9ZaWVQenSEc4a4wrtcn8A327XZs7wpjwYjhKK8JdpL8pEeqHgntGejq49tLgsUCfPwCqubeGMcG4gGB9UE',
+  version: app.getVersion(),
 };
 
 // Pre-define main objects
@@ -202,15 +203,36 @@ function handleSquirrelEvent(application) {
     return spawn(updateDotExe, args);
   };
 
+  // ------------------------------------ //
+
+  const server = 'https://hazel-h59indnhf.now.sh';
+  const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
+  autoUpdater.setFeedURL(feed);
+  var updateIsReady = false;
+
+  ipcMain.on("app:install-update", function () {
+    if (updateIsReady) {
+      autoUpdater.quitAndInstall();
+    }
+    else {
+      app.relaunch();
+      app.quit();
+    }
+  });
+
+  autoUpdater.on("update-downloaded", function () {
+    updateIsReady = true;
+    mainWindow.webContents.send("app:update-ready");
+  });
+
+  // check for updates after 2 minutes
+  setTimeout(autoUpdater.checkForUpdates, 2 * 60 * 1000);
+  // ------------------------------------ //
+
   const squirrelEvent = process.argv[1];
   switch (squirrelEvent) {
     case '--squirrel-install':
     case '--squirrel-updated':
-      // Optionally do things such as:
-      // - Add your .exe to the PATH
-      // - Write to the registry for things like file associations and
-      //   explorer context menus
-
       // Install desktop and start menu shortcuts
       spawnUpdate(['--createShortcut', exeName]);
 
