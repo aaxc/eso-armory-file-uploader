@@ -1,11 +1,17 @@
 // Modules to control application life and create native browser window
-const {app, Menu, Tray, BrowserWindow, autoUpdater, ipcMain} = require('electron');
-
+const {app, Menu, Tray, BrowserWindow, ipcMain } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 const Store = require('./js/Store.js');
 const CronJob = require('cron').CronJob;
 const FormData = require('form-data');
+
+// Auto updater
+const server = 'https://your-deployment-url.com';
+const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
+console.log(feed);
+autoUpdater.setFeedURL(feed);
 
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent(app)) {
@@ -157,6 +163,9 @@ app.on('ready', () => {
   });
   tray.setToolTip('ESO Armory File uploader')
   tray.setContextMenu(contextMenu)
+
+  // Check updtes
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 // This method will be called when App has finished initialization and is ready to create browser windows.
@@ -173,6 +182,16 @@ app.on('activate', function () {
   if (mainWindow === null) createWindow()
 });
 
+autoUpdater.on('update-available', () => {
+  mainWindow.webContents.send('update_available');
+});
+autoUpdater.on('update-downloaded', () => {
+  mainWindow.webContents.send('update_downloaded');
+});
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall();
+});
+
 // Installer events
 function handleSquirrelEvent(application) {
   if (process.argv.length === 1) {
@@ -187,19 +206,20 @@ function handleSquirrelEvent(application) {
   const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
   const exeName = path.basename(process.execPath);
 
-  const spawn = function(command, args) {
+  const spawn = function (command, args) {
     let spawnedProcess, error;
 
     try {
       spawnedProcess = ChildProcess.spawn(command, args, {
         detached: true
       });
-    } catch (error) {}
+    } catch (error) {
+    }
 
     return spawnedProcess;
   };
 
-  const spawnUpdate = function(args) {
+  const spawnUpdate = function (args) {
     return spawn(updateDotExe, args);
   };
 
@@ -213,8 +233,7 @@ function handleSquirrelEvent(application) {
   ipcMain.on("app:install-update", function () {
     if (updateIsReady) {
       autoUpdater.quitAndInstall();
-    }
-    else {
+    } else {
       app.relaunch();
       app.quit();
     }

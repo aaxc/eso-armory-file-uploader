@@ -1,0 +1,4 @@
+appId:
+publish:
+  provider: github
+  token:

@@ -69,6 +69,15 @@
         Last auto upload <span id="lastUpdate"></span>
     </footer>
 </div>
+<div id="notification" class="hidden">
+    <p id="message"></p>
+    <button id="close-button2" onClick="closeNotification()">
+        Close
+    </button>
+    <button id="restart-button2" onClick="restartApp()" class="hidden">
+        Restart
+    </button>
+</div>
 <script src="./renderer.js"></script>
 <script>window.$ = window.jQuery = require('jquery');</script>
 <script src="./js/scripts.js"></script>
