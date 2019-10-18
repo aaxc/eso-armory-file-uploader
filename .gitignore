@@ -4,3 +4,5 @@ node_modules
 /.eso-afu-win32-x64/*
 /.installers/*
 electron-builder.yml
+eso-afu-win32-x64/
+installers/
