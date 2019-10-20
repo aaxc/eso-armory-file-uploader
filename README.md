@@ -2,7 +2,7 @@
 Create your own character armory and let others see your fame!
 
 - Name: `eso-armory-file-uploader`
-- Version: `1.1.13`
+- Version: `1.1.14`
 
 ## TODO
 
@@ -29,6 +29,6 @@ npm start
 ## Building installer
 
 ```bash
-electron-packager . --platform=win32 --arch=x64 eso-afu
-nbode .\build.js
+electron-packager . --platform=win32 --arch=x64 --overwrite eso-afu
+node .\build.js
 ```

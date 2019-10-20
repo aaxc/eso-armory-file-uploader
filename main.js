@@ -1,17 +1,10 @@
 // Modules to control application life and create native browser window
-const {app, Menu, Tray, BrowserWindow, ipcMain } = require('electron');
-const { autoUpdater } = require('electron-updater');
+const {app, Menu, Tray, BrowserWindow } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const Store = require('./js/Store.js');
 const CronJob = require('cron').CronJob;
 const FormData = require('form-data');
-
-// Auto updater
-const server = 'https://your-deployment-url.com';
-const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
-console.log(feed);
-autoUpdater.setFeedURL(feed);
 
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent(app)) {
@@ -163,9 +156,6 @@ app.on('ready', () => {
   });
   tray.setToolTip('ESO Armory File uploader')
   tray.setContextMenu(contextMenu)
-
-  // Check updtes
-  autoUpdater.checkForUpdatesAndNotify();
 });
 
 // This method will be called when App has finished initialization and is ready to create browser windows.
@@ -180,16 +170,6 @@ app.on('window-all-closed', function () {
 // On macOS it's common to re-create a window in the app when the dock icon is clicked and there are no other windows open.
 app.on('activate', function () {
   if (mainWindow === null) createWindow()
-});
-
-autoUpdater.on('update-available', () => {
-  mainWindow.webContents.send('update_available');
-});
-autoUpdater.on('update-downloaded', () => {
-  mainWindow.webContents.send('update_downloaded');
-});
-ipcMain.on('restart_app', () => {
-  autoUpdater.quitAndInstall();
 });
 
 // Installer events
@@ -222,31 +202,6 @@ function handleSquirrelEvent(application) {
   const spawnUpdate = function (args) {
     return spawn(updateDotExe, args);
   };
-
-  // ------------------------------------ //
-
-  const server = 'https://hazel-h59indnhf.now.sh';
-  const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
-  autoUpdater.setFeedURL(feed);
-  var updateIsReady = false;
-
-  ipcMain.on("app:install-update", function () {
-    if (updateIsReady) {
-      autoUpdater.quitAndInstall();
-    } else {
-      app.relaunch();
-      app.quit();
-    }
-  });
-
-  autoUpdater.on("update-downloaded", function () {
-    updateIsReady = true;
-    mainWindow.webContents.send("app:update-ready");
-  });
-
-  // check for updates after 2 minutes
-  setTimeout(autoUpdater.checkForUpdates, 2 * 60 * 1000);
-  // ------------------------------------ //
 
   const squirrelEvent = process.argv[1];
   switch (squirrelEvent) {
