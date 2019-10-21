@@ -1,14 +1,14 @@
 {
   "name": "eso_armory_file_uploader",
-  "version": "1.1.14",
+  "version": "1.1.15",
   "description": "Create your own character armory and let others see your fame!",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/aaxc/eso-armory-file-uploader.git"
+    "type": "git",
+    "url": "https://github.com/aaxc/eso-armory-file-uploader.git"
   },
   "build": "electron-builder build --mac --win --publish never",
   "deploy": "electron-builder build --mac --win --publish always",
@@ -21,17 +21,18 @@
   "author": "Dainis Abols (aaxc)",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^6.0.10",
+    "electron": "^6.0.12",
     "electron-builder": "^21.2.0",
     "electron-packager": "^14.0.6",
     "electron-squirrel-startup": "^1.0.0"
   },
   "dependencies": {
+    "auto-launch": "^5.0.5",
     "auto-updater": "^1.0.2",
-    "chokidar": "^3.1.1",
+    "chokidar": "^3.2.2",
     "cron": "^1.7.2",
     "custom-electron-titlebar": "^3.1.0",
-    "dotenv": "^8.1.0",
+    "dotenv": "^8.2.0",
     "electron-updater": "^4.1.2",
     "electron-winstaller": "^4.0.0",
     "form-data": "^2.5.1",

@@ -5,6 +5,26 @@ const fs = require('fs');
 const Store = require('./js/Store.js');
 const CronJob = require('cron').CronJob;
 const FormData = require('form-data');
+var AutoLaunch = require('auto-launch');
+
+var esoAfuAutoLauncher = new AutoLaunch({
+  name: 'ESO Armory File uploader',
+  isHidden: true,
+});
+
+esoAfuAutoLauncher.enable();
+//esoAfuAutoLauncher.disable();
+
+esoAfuAutoLauncher.isEnabled()
+  .then(function(isEnabled){
+    if(isEnabled){
+      return;
+    }
+    esoAfuAutoLauncher.enable();
+  })
+  .catch(function(err){
+    // handle error
+  });
 
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent(app)) {

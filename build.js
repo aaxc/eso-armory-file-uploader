@@ -10,7 +10,7 @@ var settings = {
   authors: 'Dainis Abols (Aaxc)',
   owner: 'Dainis Abols (Aaxc)',
   description: 'Create your own character armory and let others see your fame!',
-  version: '1.1.14',
+  version: '1.1.15',
   iconUrl: 'file:///C:/data/PRIVATE/eso-armory-file-uploader/images/icon256x256.ico',
   setupIcon: './images/icon256x256.ico',
   setupMsi: 'eso_afu_setup.msi',
