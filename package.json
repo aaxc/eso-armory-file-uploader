@@ -18,7 +18,7 @@
     "file",
     "Uploader"
   ],
-  "author": "Dainis Abols (aaxc)",
+  "author": "Dainis Abols (Aaxc)",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^6.0.12",
@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
-    "auto-updater": "^1.0.2",
     "chokidar": "^3.2.2",
     "cron": "^1.7.2",
     "custom-electron-titlebar": "^3.1.0",
@@ -36,8 +35,7 @@
     "electron-updater": "^4.1.2",
     "electron-winstaller": "^4.0.0",
     "form-data": "^2.5.1",
-    "jquery": "^3.4.1",
-    "update-electron-app": "^1.5.0"
+    "jquery": "^3.4.1"
   },
   "win": {
     "target": "NSIS"

@@ -9,7 +9,6 @@ var AutoLaunch = require('auto-launch');
 
 var esoAfuAutoLauncher = new AutoLaunch({
   name: 'ESO Armory File uploader',
-  isHidden: true,
 });
 
 esoAfuAutoLauncher.enable();
@@ -123,6 +122,7 @@ new CronJob(' */5 * * * *', function () {
 
         let form = new FormData();
         form.append("file", fs.createReadStream(file));
+        form.append("version", app.getVersion());
         form.append("token", token);
 
         form.submit(site, function (err, res) {
