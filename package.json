@@ -26,7 +26,7 @@
   "author": "ESO Armory",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^6.0.12",
+    "electron": "^6.1.1",
     "electron-builder": "^21.2.0",
     "electron-packager": "^14.0.6",
     "electron-squirrel-startup": "^1.0.0"
