@@ -1,10 +1,15 @@
 {
   "name": "eso_armory_file_uploader",
-  "version": "1.1.15",
+  "version": "1.1.16",
   "description": "Create your own character armory and let others see your fame!",
   "main": "main.js",
+  "productName": "ESO Armory File uploader",
+  "copyright": "2019 (c) Aaxc",
+  "publisher": "ESO Armory",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true",
+    "package-win": "electron-packager . eso-afu --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds --icon=images/icon256x256.ico --prune=true--win32metadata.FileDescription=\"Lightweight online armory for Elder Scrolls Online characters\" --win32metadata.CompanyName=\"ESO Armory\" --win32metadata.ProductName=\"ESO Armory File uploader\" --app-copyright=\"2019 (c) ESO Armory\""
   },
   "repository": {
     "type": "git",
@@ -18,7 +23,7 @@
     "file",
     "Uploader"
   ],
-  "author": "Dainis Abols (Aaxc)",
+  "author": "ESO Armory",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^6.0.12",
@@ -32,7 +37,6 @@
     "cron": "^1.7.2",
     "custom-electron-titlebar": "^3.1.0",
     "dotenv": "^8.2.0",
-    "electron-updater": "^4.1.2",
     "electron-winstaller": "^4.0.0",
     "form-data": "^2.5.1",
     "jquery": "^3.4.1"

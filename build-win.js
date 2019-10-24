@@ -5,12 +5,14 @@ var electronInstaller = require('electron-winstaller');
 var settings = {
   // Specify the folder where the built app is located
   title: 'ESO Armory File uploader',
-  appDirectory: './eso-afu-win32-x64',
-  outputDirectory: './installers',
-  authors: 'Dainis Abols (Aaxc)',
-  owner: 'Dainis Abols (Aaxc)',
+  appDirectory: './release-builds/eso-afu-win32-x64',
+  outputDirectory: './installers/win',
+  authors: 'ESO Armory',
+  owner: 'ESO Armory',
+  productName: 'ESO Armory File uploader',
+  copyright: '2019 (c) ESO Armory',
   description: 'Create your own character armory and let others see your fame!',
-  version: '1.1.15',
+  version: '1.1.16',
   iconUrl: 'file:///C:/data/PRIVATE/eso-armory-file-uploader/images/icon256x256.ico',
   setupIcon: './images/icon256x256.ico',
   setupMsi: 'eso_afu_setup.msi',
@@ -21,7 +23,7 @@ var settings = {
 resultPromise = electronInstaller.createWindowsInstaller(settings);
 
 resultPromise.then(() => {
-  console.log("The installers of your application were succesfully created !");
+  console.log("The installers of your application were successfully created !");
 }, (e) => {
   console.log(`Well, sometimes you are not so lucky: ${e.message}`)
 });

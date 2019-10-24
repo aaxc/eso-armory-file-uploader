@@ -197,6 +197,7 @@
       let that = document.getElementById('my-file');
       let formData = new FormData();
       formData.append("file", that.files[0]);
+      formData.append("version", version);
       formData.append("token", token);
       var action = site;
       let response = await fetch(action, {

@@ -46,7 +46,6 @@ let fileChange;
 let site = global.sharedObj.site;
 let token = global.sharedObj.token;
 
-
 // First instantiate the class
 const store = new Store({
   configName: 'user-preferences',
@@ -122,8 +121,8 @@ new CronJob(' */5 * * * *', function () {
 
         let form = new FormData();
         form.append("file", fs.createReadStream(file));
-        form.append("version", app.getVersion());
         form.append("token", token);
+        form.append("version", app.getVersion());
 
         form.submit(site, function (err, res) {
           if (res.statusCode == 200) {
