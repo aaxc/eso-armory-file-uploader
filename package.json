@@ -8,7 +8,7 @@
   "publisher": "ESO Armory",
   "scripts": {
     "start": "electron .",
-    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
     "package-win": "electron-packager . eso-afu --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds --icon=images/icon256x256.ico --prune=true--win32metadata.FileDescription=\"Lightweight online armory for Elder Scrolls Online characters\" --win32metadata.CompanyName=\"ESO Armory\" --win32metadata.ProductName=\"ESO Armory File uploader\" --app-copyright=\"2019 (c) ESO Armory\""
   },
   "repository": {
