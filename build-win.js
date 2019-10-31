@@ -12,7 +12,7 @@ var settings = {
   productName: 'ESO Armory File uploader',
   copyright: '2019 (c) ESO Armory',
   description: 'Create your own character armory and let others see your fame!',
-  version: '1.1.16',
+  version: '1.1.17',
   iconUrl: 'file:///C:/data/PRIVATE/eso-armory-file-uploader/images/icon256x256.ico',
   setupIcon: './images/icon256x256.ico',
   setupMsi: 'eso_afu_setup.msi',

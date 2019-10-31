@@ -1,6 +1,6 @@
 {
   "name": "eso_armory_file_uploader",
-  "version": "1.1.16",
+  "version": "1.1.17",
   "description": "Create your own character armory and let others see your fame!",
   "main": "main.js",
   "productName": "ESO Armory File uploader",
@@ -26,14 +26,14 @@
   "author": "ESO Armory",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^6.1.1",
+    "electron": "^6.1.2",
     "electron-builder": "^21.2.0",
-    "electron-packager": "^14.0.6",
+    "electron-packager": "^14.1.0",
     "electron-squirrel-startup": "^1.0.0"
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
-    "chokidar": "^3.2.2",
+    "chokidar": "^3.2.3",
     "cron": "^1.7.2",
     "custom-electron-titlebar": "^3.1.0",
     "dotenv": "^8.2.0",
