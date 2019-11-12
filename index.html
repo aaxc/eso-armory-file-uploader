@@ -150,7 +150,7 @@
       if (typeof lastUpdate != 'undefined') {
         $("#lastUpdate").text(formatDate(lastUpdate));
       }
-    }, 60000);
+    }, 60000*60);
 
     // Set default file name
     const fileLocation = store.get('fileLocation');
