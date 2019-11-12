@@ -9,7 +9,8 @@
   function init() {
     let window = remote.getCurrentWindow();
     const minButton = document.getElementById('minimize-button'),
-          closeButton = document.getElementById('close-button');
+          closeButton = document.getElementById('close-button'),
+      destroyButton = document.getElementById('destroy-button');
 
     minButton.addEventListener("click", event => {
       window = remote.getCurrentWindow();
@@ -19,6 +20,11 @@
     closeButton.addEventListener("click", event => {
       window = remote.getCurrentWindow();
       window.close();
+    });
+
+    destroyButton.addEventListener("click", event => {
+      window = remote.getCurrentWindow();
+      window.destroy();
     });
   }
 })();

@@ -9,8 +9,9 @@
       const remote = require('electron').remote;
       const store = remote.getGlobal('sharedObj').store;
       const version = remote.getGlobal('sharedObj').version;
-      let site = remote.getGlobal('sharedObj').site;
-      let token = remote.getGlobal('sharedObj').token;
+      const site = remote.getGlobal('sharedObj').site;
+      const token = remote.getGlobal('sharedObj').token;
+      const ipcRenderer = require('electron').ipcRenderer;
     </script>
 </head>
 <body style="background: url('./images/Background.png') no-repeat center center fixed; background-color: black !important; background-size: cover;">
@@ -18,6 +19,12 @@
 <div id="title-bar">
     <div id="topTitle">ESO Armory file uploader</div>
     <div id="title-bar-btns">
+        <div class="updateRestart hidden" id="destroy-button">
+            <img width="20" height="20" src="./images/warning.png" title="Close app and install update"/>
+        </div>
+        <div class="updateDownload hidden" id="downloading-button">
+            <img width="20" height="20" src="./images/downloading.gif" title="Downloading update"/>
+        </div>
         <div class="button" id="close-button">
             <span>&#xE8BB;</span>
         </div>
@@ -42,7 +49,7 @@
         <div class="text title">Currently used auto-upload file:</div>
         <div class="text green limitThree" id="usedFile"></div>
 
-        <div class="messageWindow" style="display: none;">Nothing going, on nothing going on! I've got a whole lot of
+        <div class="messageWindow" style="display: none;">Nothing going on, nothing going on! I've got a whole lot of
             nothing!
         </div>
 
@@ -69,15 +76,23 @@
         Last auto upload <span id="lastUpdate"></span>
     </footer>
 </div>
-<div id="notification" class="hidden">
-    <p id="message"></p>
-    <button id="close-button2" onClick="closeNotification()">
-        Close
-    </button>
-    <button id="restart-button2" onClick="restartApp()" class="hidden">
-        Restart
-    </button>
-</div>
+
+<!----   AUTO UPDATE FEATURES   ---->
+<script>
+  const downloadButton = document.getElementById('downloading-button');
+  const restartButton = document.getElementById('close-button2');
+  ipcRenderer.on('update_available', () => {
+    ipcRenderer.removeAllListeners('update_available');
+    downloadButton.classList.remove('hidden');
+  });
+  ipcRenderer.on('update_downloaded', () => {
+    ipcRenderer.removeAllListeners('update_downloaded');
+    downloadButton.classList.add('hidden');
+    restartButton.classList.remove('hidden');
+  });
+</script>
+
+<!----   REGULAR SCRIPTS   ---->
 <script src="./renderer.js"></script>
 <script>window.$ = window.jQuery = require('jquery');</script>
 <script src="./js/scripts.js"></script>
@@ -214,29 +229,6 @@
       }
     }
   });
-
-  // Updates
-  const notification = document.getElementById('notification');
-  const message = document.getElementById('message');
-  const restartButton = document.getElementById('restart-button2');
-  ipcRenderer.on('update_available', () => {
-    ipcRenderer.removeAllListeners('update_available');
-    message.innerText = 'A new update is available. Downloading now...';
-    notification.classList.remove('hidden');
-  });
-  ipcRenderer.on('update_downloaded', () => {
-    ipcRenderer.removeAllListeners('update_downloaded');
-    message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
-    restartButton.classList.remove('hidden');
-    notification.classList.remove('hidden');
-  });
-
-  function closeNotification() {
-    notification.classList.add('hidden');
-  }
-  function restartApp() {
-    ipcRenderer.send('restart_app');
-  }
 </script>
 </body>
 </html>

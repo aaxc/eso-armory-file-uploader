@@ -1,11 +1,12 @@
 // Modules to control application life and create native browser window
-const {app, Menu, Tray, BrowserWindow } = require('electron');
+const {app, Menu, Tray, BrowserWindow, ipcMain, ipcRenderer} = require('electron');
 const path = require('path');
 const fs = require('fs');
 const Store = require('./js/Store.js');
 const CronJob = require('cron').CronJob;
 const FormData = require('form-data');
 var AutoLaunch = require('auto-launch');
+const {autoUpdater} = require('electron-updater');
 
 var esoAfuAutoLauncher = new AutoLaunch({
   name: 'ESO Armory File uploader',
@@ -15,13 +16,13 @@ esoAfuAutoLauncher.enable();
 //esoAfuAutoLauncher.disable();
 
 esoAfuAutoLauncher.isEnabled()
-  .then(function(isEnabled){
-    if(isEnabled){
+  .then(function (isEnabled) {
+    if (isEnabled) {
       return;
     }
     esoAfuAutoLauncher.enable();
   })
-  .catch(function(err){
+  .catch(function (err) {
     // handle error
   });
 
@@ -140,7 +141,7 @@ new CronJob(' */5 * * * *', function () {
 }, null, true, 'America/Los_Angeles');
 
 // Define tray and minimize behavior
-app.on('ready', () => {
+app.on('ready', async () => {
   let fileLocation;
   if (!fs.existsSync(store.get('fileLocation'))) {
     fileLocation = null;
@@ -175,6 +176,10 @@ app.on('ready', () => {
   });
   tray.setToolTip('ESO Armory File uploader')
   tray.setContextMenu(contextMenu)
+
+  // Auto-update features - check for updates every minute
+  checkForUpdates();
+  setInterval(checkForUpdates, 60000);
 });
 
 // This method will be called when App has finished initialization and is ready to create browser windows.
@@ -189,6 +194,14 @@ app.on('window-all-closed', function () {
 // On macOS it's common to re-create a window in the app when the dock icon is clicked and there are no other windows open.
 app.on('activate', function () {
   if (mainWindow === null) createWindow()
+});
+
+// Auto-update events
+autoUpdater.on('update-available', () => {
+  mainWindow.webContents.send('update_available');
+});
+autoUpdater.on('update-downloaded', () => {
+  mainWindow.webContents.send('update_downloaded');
 });
 
 // Installer events
@@ -250,4 +263,11 @@ function handleSquirrelEvent(application) {
       application.quit();
       return true;
   }
+};
+
+/**
+ * Check update method
+ */
+const checkForUpdates = () => {
+  autoUpdater.checkForUpdatesAndNotify();
 };
