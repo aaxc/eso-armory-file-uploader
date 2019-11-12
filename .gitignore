@@ -6,3 +6,4 @@ node_modules
 electron-builder.yml
 eso-afu-win32-x64/
 installers/
+dist/

@@ -80,7 +80,7 @@
 <!----   AUTO UPDATE FEATURES   ---->
 <script>
   const downloadButton = document.getElementById('downloading-button');
-  const restartButton = document.getElementById('close-button2');
+  const restartButton = document.getElementById('destroy-button');
   ipcRenderer.on('update_available', () => {
     ipcRenderer.removeAllListeners('update_available');
     downloadButton.classList.remove('hidden');
