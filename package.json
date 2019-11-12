@@ -1,6 +1,6 @@
 {
   "name": "eso_armory_file_uploader",
-  "version": "1.1.17",
+  "version": "1.1.28",
   "description": "Create your own character armory and let others see your fame!",
   "main": "main.js",
   "productName": "ESO Armory File uploader",
@@ -8,15 +8,14 @@
   "publisher": "ESO Armory",
   "scripts": {
     "start": "electron .",
-    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
-    "package-win": "electron-packager . eso-afu --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds --icon=images/icon256x256.ico --prune=true--win32metadata.FileDescription=\"Lightweight online armory for Elder Scrolls Online characters\" --win32metadata.CompanyName=\"ESO Armory\" --win32metadata.ProductName=\"ESO Armory File uploader\" --app-copyright=\"2019 (c) ESO Armory\""
+    "package": "electron-packager . eso-afu --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds --icon=images/icon256x256.ico --prune=true--win32metadata.FileDescription=\"Lightweight online armory for Elder Scrolls Online characters\" --win32metadata.CompanyName=\"ESO Armory\" --win32metadata.ProductName=\"ESO Armory File uploader\" --app-copyright=\"2019 (c) ESO Armory\"",
+    "build": "electron-builder  build --win --x64 --publish never ",
+    "deploy": "electron-builder build --win --x64 --publish always"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/aaxc/eso-armory-file-uploader.git"
   },
-  "build": "electron-builder build --mac --win --publish never",
-  "deploy": "electron-builder build --mac --win --publish always",
   "keywords": [
     "ESO",
     "Armory",
@@ -26,18 +25,17 @@
   "author": "ESO Armory",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^6.1.2",
+    "electron": "^6.1.4",
     "electron-builder": "^21.2.0",
-    "electron-packager": "^14.1.0",
     "electron-squirrel-startup": "^1.0.0"
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
-    "chokidar": "^3.2.3",
+    "chokidar": "^3.3.0",
     "cron": "^1.7.2",
     "custom-electron-titlebar": "^3.1.0",
     "dotenv": "^8.2.0",
-    "electron-winstaller": "^4.0.0",
+    "electron-updater": "^4.2.0",
     "form-data": "^2.5.1",
     "jquery": "^3.4.1"
   },
