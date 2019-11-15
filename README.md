@@ -22,8 +22,6 @@ git clone https://github.com/aaxc/eso-armory-file-uploader
 cd eso-armory-file-uploader
 # Install dependencies
 npm install
-# Run the app
-npm start
 ```
 
 ## Testing app
@@ -32,7 +30,13 @@ npm start
 npm start
 ```
 
-## Publishing installer
+## Building installer
+
+```bash
+npm run build
+```
+
+## Building and publishing installer release
 
 ```bash
 npm run deploy
