@@ -125,15 +125,20 @@ new CronJob(' */5 * * * *', function () {
         form.append("token", token);
         form.append("version", app.getVersion());
 
-        form.submit(site, function (err, res) {
-          if (res.statusCode == 200) {
-            global.sharedObj.lastUpdate = fileChange.valueOf();
-            store.set('lastUpdate', fileChange.valueOf());
-            // console.log('SUCCESS!');
-          } else {
-            // console.log('FAILED');
-          }
-        });
+
+        try {
+          form.submit(site, function (err, res) {
+            if (res.statusCode == 200) {
+              global.sharedObj.lastUpdate = fileChange.valueOf();
+              store.set('lastUpdate', fileChange.valueOf());
+              // console.log('SUCCESS!');
+            } else {
+              // console.log('FAILED');
+            }
+          });
+        } catch(e) {
+          // Error submitting data... just be silent .. for now
+        }
       }
     });
   }
