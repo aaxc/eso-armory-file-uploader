@@ -2,7 +2,7 @@
 Create your own character armory and let others see your fame!
 
 - Name: `eso-armory-file-uploader`
-- Version: `1.2.3`
+- Version: `1.2.4`
 
 ## TODO
 
@@ -33,7 +33,8 @@ npm start
 ## Building installer
 
 ```bash
-npm run build
+npm run build-win
+npm run build-mac
 ```
 
 ## Building and publishing installer release
