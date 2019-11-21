@@ -128,12 +128,14 @@ new CronJob(' */5 * * * *', function () {
 
         try {
           form.submit(site, function (err, res) {
-            if (res.statusCode == 200) {
-              global.sharedObj.lastUpdate = fileChange.valueOf();
-              store.set('lastUpdate', fileChange.valueOf());
-              // console.log('SUCCESS!');
-            } else {
-              // console.log('FAILED');
+            if (typeof res !== 'undefined') {
+              if (res.statusCode == 200) {
+                global.sharedObj.lastUpdate = fileChange.valueOf();
+                store.set('lastUpdate', fileChange.valueOf());
+                // console.log('SUCCESS!');
+              } else {
+                // console.log('FAILED');
+              }
             }
           });
         } catch(e) {
