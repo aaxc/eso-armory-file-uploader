@@ -109,7 +109,7 @@ function createWindow() {
 }
 
 // Add cron for file changes and submits
-new CronJob(' */5 * * * *', function () {
+new CronJob('*/5 * * * *', function () {
   let file = global.sharedObj.store.data.fileLocation;
   let auto = global.sharedObj.store.data.auto;
   if (auto == 'true' && fs.existsSync(file)) {
@@ -144,7 +144,7 @@ new CronJob(' */5 * * * *', function () {
       }
     });
   }
-
+  
 }, null, true, 'America/Los_Angeles');
 
 // Define tray and minimize behavior
