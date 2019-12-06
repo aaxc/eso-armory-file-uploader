@@ -1,6 +1,6 @@
 {
   "name": "eso_armory_file_uploader",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Create your own character armory and let others see your fame!",
   "main": "main.js",
   "productName": "ESO Armory File uploader",
@@ -12,7 +12,7 @@
     "build": "electron-builder  build --win --mac --x64 --publish never ",
     "build-win": "electron-builder  build --win --x64 --publish never ",
     "build-mac": "electron-builder  build --mac --publish never ",
-    "deploy": "electron-builder build --win --linux --x64 --publish always"
+    "deploy": "electron-builder build --win -c.snap.publish=github --x64 --publish always"
   },
   "repository": {
     "type": "git",
