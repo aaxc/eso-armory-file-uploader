@@ -2,7 +2,7 @@
 Create your own character armory and let others see your fame!
 
 - Name: `eso-armory-file-uploader`
-- Version: `1.2.8`
+- Version: `1.2.9`
 
 ## TODO
 

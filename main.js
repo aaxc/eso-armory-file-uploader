@@ -188,7 +188,7 @@ app.on('ready', async () => {
   checkForUpdates();
   setInterval(function(){
     checkForUpdates();
-  }, 6000);
+  }, 60000);
 });
 
 // This method will be called when App has finished initialization and is ready to create browser windows.
