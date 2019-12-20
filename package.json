@@ -1,15 +1,15 @@
 {
   "name": "eso_armory_file_uploader",
-  "version": "1.2.1-",
-  "description": "Create your own character armory and let others see your fame!",
+  "version": "1.3.0",
+  "description": "Create your own character armory and let others see your fame",
   "main": "main.js",
   "productName": "ESO Armory File uploader",
   "copyright": "2019 (c) Aaxc",
   "publisher": "ESO Armory",
   "scripts": {
     "start": "electron .",
-    "package": "electron-packager . eso-afu --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds --icon=images/icon256x256.ico --prune=true--win32metadata.FileDescription=\"Lightweight online armory for Elder Scrolls Online characters\" --win32metadata.CompanyName=\"ESO Armory\" --win32metadata.ProductName=\"ESO Armory File uploader\" --app-copyright=\"2019 (c) ESO Armory\"",
-    "build": "electron-builder  build --win --mac --x64 --publish never ",
+    "package": "electron-packager . eso-afu --overwrite --asar=true --platform=win32 --arch=x64 --out=release-builds --icon=images/icon256x256.ico --prune=true--win32metadata.FileDescription=\"Lightweight online armory for Elder Scrolls Online characters\" --win32metadata.CompanyName=\"Dainis Abols\" --win32metadata.ProductName=\"ESO Armory File uploader\" --app-copyright=\"2019 (c) ESO Armory\"",
+    "appx": "node build-store.js",
     "build-win": "electron-builder  build --win --x64 --publish never ",
     "build-mac": "electron-builder  build --mac --publish never ",
     "deploy": "electron-builder build --win -c.snap.publish=github --x64 --publish always"
@@ -24,7 +24,7 @@
     "file",
     "Uploader"
   ],
-  "author": "ESO Armory",
+  "author": "Dainis Abols",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^6.1.4",
@@ -38,6 +38,7 @@
     "custom-electron-titlebar": "^3.1.0",
     "dotenv": "^8.2.0",
     "electron-updater": "^4.2.0",
+    "electron-windows-store": "^2.1.0",
     "form-data": "^2.5.1",
     "jquery": "^3.4.1"
   },
