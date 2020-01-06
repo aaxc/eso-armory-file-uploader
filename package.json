@@ -27,12 +27,12 @@
   "author": "Dainis Abols",
   "license": "CC0-1.0",
   "devDependencies": {
+    "auto-launch": "^5.0.5",
     "electron": "^6.1.4",
     "electron-builder": "^21.2.0",
     "electron-squirrel-startup": "^1.0.0"
   },
   "dependencies": {
-    "auto-launch": "^5.0.5",
     "chokidar": "^3.3.0",
     "cron": "^1.7.2",
     "custom-electron-titlebar": "^3.1.0",
