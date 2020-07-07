@@ -27,7 +27,7 @@
   "author": "Dainis Abols",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^6.1.4",
+    "electron": "^9.1.0",
     "electron-builder": "^21.2.0",
     "electron-squirrel-startup": "^1.0.0"
   },
